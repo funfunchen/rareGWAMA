@@ -4,12 +4,12 @@
 \alias{multiAlleleAssoc}
 \title{Perform multi-allelic association tests;}
 \usage{
-multiAlleleAssoc(pos, dat, corMultiAllele.mat)
+multiAlleleAssoc(pos, dat, corMultiAllele.mat, ...)
 }
 \arguments{
 \item{pos}{The position of multi-allelic site;}
 
-\item{dat}{The formatted data;}
+\item{dat}{The formated data;}
 
 \item{corMultiAllele.mat}{the correlation matrix generated from multiple alleles;}
 }

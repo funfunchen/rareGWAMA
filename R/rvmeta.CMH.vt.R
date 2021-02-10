@@ -201,14 +201,6 @@ pmaxnorm <- function(x,mu,sigma)
     if(length(attr(tmp,'class'))>0) return(NA);
     return(tmp);
   }
-pmaxnormsq <- function(x,mu,sigma)
-  {
-    if(x<0) return(0);
-    tmp <- try(pmvnorm(upper=rep(sqrt(x),length(mu)),lower=rep(-sqrt(x),length(mu)),mean=mu,sigma=sigma),silent=TRUE);
-
-    if(class(tmp)=='try-error') return(NA);
-    return(as.numeric(tmp));
-  }
 pminnorm <- function(x,mu,sigma)
   {
     tmp <- try(as.numeric(pmvnorm(upper=rep(Inf,length(mu)),lower=rep(x,length(mu)),mean=mu,sigma=sigma)),silent=TRUE);

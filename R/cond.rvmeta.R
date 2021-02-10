@@ -125,12 +125,12 @@ cond.rvmeta <- function(score.stat.vec.list,maf.vec.list,cov.mat.list,var.Y.list
     if(alternative=='greater')
       {
         statistic.single <- U.stat/sqrt(V.stat.sq);
-        p.value.single <- pnorm(statistic.single,lower.taill=FALSE);
+        p.value.single <- pnorm(statistic.single,lower.tail=FALSE);
       }
     if(alternative=='less')
       {
         statistic.single <- U.stat/sqrt(V.stat.sq);
-        p.value.single <- pnorm(statistic,lower.taill=TRUE);
+        p.value.single <- pnorm(statistic,lower.tail=TRUE);
       }
     beta1.est.single <- U.stat/V.stat.sq;
     beta1.sd.single <- sqrt(1/V.stat.sq);

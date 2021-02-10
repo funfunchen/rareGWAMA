@@ -4,8 +4,15 @@
 \alias{rareGWAMA.cond.single.msso}
 \title{conditional analysis for single variant association test;}
 \usage{
-rareGWAMA.cond.single.msso(score.stat.file, imp.qual.file = NULL,
-  vcf.ref.file, candidateVar, knownVar, alternative = "two.sided", ...)
+rareGWAMA.cond.single.msso(
+  score.stat.file,
+  imp.qual.file = NULL,
+  vcf.ref.file,
+  candidateVar,
+  knownVar,
+  alternative = "two.sided",
+  ...
+)
 }
 \arguments{
 \item{score.stat.file}{the file names of score statistic files;}

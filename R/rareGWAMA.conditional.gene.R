@@ -27,7 +27,7 @@ rareGWAMA.cond.gene <- function(score.stat.file,imp.qual.file=NULL,vcf.ref.file,
     if(is.null(col.impqual)) col.impqual <- 5;
     if(is.null(impQual.lb)) impQual.lb <- 0.7;
     if(is.null(rmMultiAllelicSite)) rmMultiAllelicSite <- TRUE;
-    if(is.null(refGeno)) refGeno <- "DS";
+    if(is.null(refGeno)) refGeno <- "GT";
     if(is.null(maf.cutoff)) maf.cutoff <- 0.05;
     missing <- extraPar$missing;
     if(is.null(missing)) missing <- 'pseudoscore';
@@ -139,7 +139,7 @@ rareGWAMA.cond.gene <- function(score.stat.file,imp.qual.file=NULL,vcf.ref.file,
             variant.direction.effect.tmp[which(res.cond$conditional.ustat==0)] <- "=";
             variant.direction.effect[ii] <- paste(variant.direction.effect.tmp,sep='',collapse='');
             maf.cutoff.out[ii] <- maf.cutoff
-            no.site[ii] <- length(dat$pos);
+            no.site[ii] <- length(res.cond$conditional.ustat);
             res.cond$V.meta <- res.cond$conditional.V;
             res.cond$maf.meta <- dat$maf.meta[ix.candidate];
             res.cond$nSample.meta <- rowSums(dat$nSample.mat,na.rm=TRUE)[ix.candidate];
@@ -150,12 +150,20 @@ rareGWAMA.cond.gene <- function(score.stat.file,imp.qual.file=NULL,vcf.ref.file,
                 maf.cutoff.out[ii] <- res.assoc$maf.cutoff.vt;
                 no.site[ii] <- res.assoc$no.site.VT;
             }
-            statistic[ii] <- res.assoc$statistic;
-            p.value[ii] <- res.assoc$p.value;
-            pos.gene[ii] <- paste(dat$pos,sep=",",collapse=",");
+            if(rvtest=='all') {
+                res.assoc.skat <- rareGWAMA.skat(dat=res.cond);
+                res.assoc.burden <- rareGWAMA.burden(dat=res.cond);
 
+                res.assoc.vt <- rareGWAMA.vt(dat=res.cond);
+                res.assoc <- list(statistic=paste(format(res.assoc.burden$statistic,digits=2),format(res.assoc.skat$statistic,digits=2),format(res.assoc.vt$statistic,digits=2),sep=',',collapse=','),
+                                  p.value=paste(format(res.assoc.burden$p.value,digits=2),format(res.assoc.skat$p.value,digits=2),format(res.assoc.vt$p.value,digits=2),sep=',',collapse=','))                                      
+                maf.cutoff.out[ii] <- paste(maf.cutoff,format(res.assoc.vt$maf.cutoff.vt,digits=2),sep=',',collapse=',');
+                no.site[ii] <- paste(no.site[ii],res.assoc.vt$no.site.VT,sep=',',collapse=',');
+            }
+            statistic[ii] <- format(res.assoc$statistic,digits=2);
+            p.value[ii] <- format(res.assoc$p.value,digits=2);
+            pos.gene[ii] <- paste(intersect(pos,candidateVar.ii),sep=",",collapse=",");
         }
-     
     }
     res.formatted <- cbind(group.vec,
                           statistic,

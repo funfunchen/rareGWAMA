@@ -4,12 +4,23 @@
 \alias{conditional.rareMETALS.single}
 \title{Perform conditional analysis for single variant tests}
 \usage{
-conditional.rareMETALS.single(candidate.variant.vec, score.stat.file, cov.file,
-  known.variant.vec, maf.cutoff, no.boot = 10000,
-  alternative = c("two.sided", "greater", "less"), ix.gold = 1,
-  out.digits = 4, callrate.cutoff = 0, hwe.cutoff = 0,
-  p.value.known.variant.vec = NA, anno.known.variant.vec = NA,
-  anno.candidate.variant.vec = NA, knownCoding = "identity")
+conditional.rareMETALS.single(
+  candidate.variant.vec,
+  score.stat.file,
+  cov.file,
+  known.variant.vec,
+  maf.cutoff,
+  no.boot = 10000,
+  alternative = c("two.sided", "greater", "less"),
+  ix.gold = 1,
+  out.digits = 4,
+  callrate.cutoff = 0,
+  hwe.cutoff = 0,
+  p.value.known.variant.vec = NA,
+  anno.known.variant.vec = NA,
+  anno.candidate.variant.vec = NA,
+  knownCoding = "identity"
+)
 }
 \arguments{
 \item{score.stat.file}{files of score statistics}

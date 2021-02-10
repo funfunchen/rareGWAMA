@@ -4,9 +4,19 @@
 \alias{rareMETALS.estimatePVE}
 \title{Estimate the variance explained for a list of variants (possibly in LD);}
 \usage{
-rareMETALS.estimatePVE(score.stat.file, cov.file, range, range.name, refaltList,
-  maf.cutoff, out.digits, callrate.cutoff, hwe.cutoff, correctFlip = TRUE,
-  lambda = 0)
+rareMETALS.estimatePVE(
+  score.stat.file,
+  cov.file,
+  range,
+  range.name,
+  refaltList,
+  maf.cutoff,
+  out.digits,
+  callrate.cutoff,
+  hwe.cutoff,
+  correctFlip = TRUE,
+  lambda = 0
+)
 }
 \arguments{
 \item{score.stat.file}{files of score statistics}

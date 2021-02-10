@@ -4,8 +4,14 @@
 \alias{get.conditional.score.stat}
 \title{This is the function to obtain conditional score statistics;}
 \usage{
-get.conditional.score.stat(ustat, X.T.times.X, N, ix.candidate, ix.known,
-  impState = NULL)
+get.conditional.score.stat(
+  ustat,
+  X.T.times.X,
+  N,
+  ix.candidate,
+  ix.known,
+  impState = NULL
+)
 }
 \arguments{
 \item{ustat}{The non-standardized score statistics}

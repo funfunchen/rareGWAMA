@@ -4,15 +4,22 @@
 \alias{rareGWAMA.cond.single}
 \title{conditional analysis for single variant association test;}
 \usage{
-rareGWAMA.cond.single(score.stat.file, imp.qual.file = NULL, vcf.ref.file,
-  candidateVar, knownVar, alternative = "two.sided", ...)
+rareGWAMA.cond.single(
+  score.stat.file,
+  imp.qual.file = NULL,
+  ref.file,
+  candidateVar,
+  knownVar,
+  alternative = "two.sided",
+  ...
+)
 }
 \arguments{
 \item{score.stat.file}{the file names of score statistic files;}
 
 \item{imp.qual.file}{the file names of imputation quality;}
 
-\item{vcf.ref.file}{the file names of the reference panel file;}
+\item{ref.file}{the file names of the reference panel file; For VCF references, use the VCF file name; for binary PLINK references, use the prefix;}
 
 \item{candidateVar}{the tabix range;}
 
@@ -33,12 +40,4 @@ A list of analysis results;
 }
 \description{
 conditional analysis for single variant association test;
-}
-\examples{
-study.vec <- c("rareGWAMA/inst/extdata/study1.gz", "rareGWAMA/inst/extdata/study1.R2.gz", "rareGWAMA/inst/extdata/study3.gz");
-r2.vec <- c("rareGWAMA/inst/extdata/study1.R2.gz", "rareGWAMA/inst/extdata/study2.R2.gz", "rareGWAMA/inst/extdata/study3.R2.gz");
-res <- rareGWAMA.cond.single(score.stat.file= study.vec, imp.qual.file = r2.vec, vcf.ref.file = "rareGWAMA/inst/extdata/1kg_fra_chr1.vcf.gz", "1:10177", "1:57200", 
-                             alternative="two.sided",col.impqual=5,impQual.lb=0,impQualWeight=FALSE, weight="Npq+impQ",gc=FALSE, 
-                             rmMultiAllelicSite=TRUE);
-head(res$res.formatted);
 }

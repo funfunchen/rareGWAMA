@@ -4,8 +4,14 @@
 \alias{GWAMA.formatData}
 \title{format data into matrices;}
 \usage{
-GWAMA.formatData(raw.data.all, raw.imp.qual, impQualWeight, impQual.lb,
-  col.impqual, ...)
+GWAMA.formatData(
+  raw.data.all,
+  raw.imp.qual,
+  impQualWeight,
+  impQual.lb,
+  col.impqual,
+  ...
+)
 }
 \arguments{
 \item{raw.data.all}{The read in from summary assoicaiton statistic files;}

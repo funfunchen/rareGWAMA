@@ -4,8 +4,15 @@
 \alias{rareGWAMA.cond.gene}
 \title{conditional analysis for single variant association test;}
 \usage{
-rareGWAMA.cond.gene(score.stat.file, imp.qual.file = NULL, vcf.ref.file,
-  candidateVar.df, knownVar, alternative = "two.sided", ...)
+rareGWAMA.cond.gene(
+  score.stat.file,
+  imp.qual.file = NULL,
+  vcf.ref.file,
+  candidateVar.df,
+  knownVar,
+  alternative = "two.sided",
+  ...
+)
 }
 \arguments{
 \item{score.stat.file}{the file names of score statistic files;}

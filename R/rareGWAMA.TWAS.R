@@ -1,220 +1,174 @@
-#' perform single tissue twas and multiple tissue twas;
+#' trans-ethnic TWAS method;
 #'
-#' @param score.stat.file the file names of score statistic files;
-#' @param imp.qual.file the file names of imputation quality;
-#' @param vcf.ref.file the file names of the reference panel file;
-#' @param transcript The list of transcript for twas;
-#' @return formatted data and assocation testing results; 
+#' @param dat the data that contains everything needed;
+#' @return a bunch of results, such as p-values;
 #' @export
-rareGWAMA.TWAS <- function(score.stat.file,imp.qual.file,vcf.ref.file,transcript,...) {
-    extraPar <- list(...);
-    lambda <- extraPar$lambda;
-    if(is.null(lambda)) lambda <- .1;
-    weightRef <- extraPar$weightRef;
-    if(is.null(weightRef)) weightRef <- "1kg";
-    load.r2 <- extraPar$load.r2;
-    if(is.null(load.r2)) load.r2 <- FALSE;
-    fname.r2.prefix <- extraPar$fname.r2.prefix;
-    fname.r2.postfix <- extraPar$fname.r2.postfix;
-    if(is.null(fname.r2.prefix)) fname.r2.prefix <- "./";
-    if(is.null(fname.r2.postfix)) fname.r2.postfix <- "_hrc.RData";
-        
-    refGeno <- extraPar$refGeno;
-    col.impqual <- extraPar$col.impqual;
-    impQual.lb <- extraPar$impQual.lb;
-    no.per.batch <- extraPar$no.per.batch;
-    if(is.null(no.per.batch)) no.per.batch <- 1000;;
+rareGWAMA.twas.predEff <- function(dat,af.pca,af.pca.eqtl) {
 
-    impQualWeight <- FALSE;
-    rmMultiAllelicSite <- extraPar$rmMultiAllelicSite;
-    if(is.null(col.impqual)) col.impqual <- 5;
-    if(is.null(impQual.lb)) impQual.lb <- 0.7;
-    if(is.null(rmMultiAllelicSite)) rmMultiAllelicSite <- TRUE;
-    if(is.null(refGeno)) refGeno <- "GT";
-    refGeno <- extraPar$refGeno;
-    col.impqual <- extraPar$col.impqual;
-    impQual.lb <- extraPar$impQual.lb;
-    impQualWeight <- FALSE;
-    rmMultiAllelicSite <- extraPar$rmMultiAllelicSite;
-    if(is.null(col.impqual)) col.impqual <- 5;
-    if(is.null(impQual.lb)) impQual.lb <- 0.7;
-    if(is.null(rmMultiAllelicSite)) rmMultiAllelicSite <- TRUE;
-    if(is.null(refGeno)) refGeno <- "GT";
-    transcript.all <- transcript;
-    
-    counter <- 0;        pval.vec <- 0;statistic.vec <- 0;transcript.out <- 0;pval.t.vec <- 0;
-    res.twas <- NULL;dat.twas <- NULL;
-    dat <- NULL;
-    for(aa in 1:max(1,as.integer(length(transcript.all)/no.per.batch))) {
-        
-        aa.start <- (aa-1)*no.per.batch+1;
-        aa.end <- aa*no.per.batch;
+    z.mat <- matrix(dat$ustat.mat/dat$vstat.mat,nrow=nrow(dat$ustat.mat),ncol=ncol(dat$ustat.mat));
 
-        if(aa>=as.integer(length(transcript.all)/no.per.batch)) aa.end <- length(transcript.all);
-        transcript <- transcript.all[aa.start:aa.end];
-        ix.match <- match(transcript,transcript.list[,1]);
-        
-        transcript.sub <- matrix(transcript.list[ix.match,],ncol=2);
-        eqtl.chrpos <- character(0);
-
-        chrpos <- character(0);
-        transcript.vec <- transcript.sub[,1];
-        chr.vec <- transcript.sub[,2];
-        
-        chrpos <- character(0);
-        for(jj in 1:length(twas.weight)) {
-            ix <- which(twas.weight[[jj]]$gene%in%transcript.vec);
-            chrpos <- c(chrpos,twas.weight[[jj]]$chrpos[ix]);
-        }
-        chrpos <- unique(chrpos);
-        print(grep("NA",chrpos,value=TRUE));
-        chrpos <- grep("NA",chrpos,invert=TRUE,value=TRUE);
-        cat('Reading ',length(chrpos),' eQTL SNPs\n',sep=' ');
-        
-        a <- Sys.time();
-        tabix.range <- get.tabix.range(chrpos);
-        
-        capture.output(raw.data.all <- rvmeta.readDataByRange( score.stat.file, NULL, tabix.range,multiAllelic = TRUE)[[1]]);
-        raw.imp.qual <- NULL;
-        if(!is.null(imp.qual.file))
-            raw.imp.qual <- lapply(imp.qual.file,tabix.read.table,tabixRange=tabix.range);    
-        cat('Read in',length(raw.data.all$ref[[1]]),'eQTL SNPs\n',sep=' ');
-        dat.all <- GWAMA.formatData(raw.data.all,raw.imp.qual,impQualWeight,impQual.lb,col.impqual);
-        dat.all$pos <- gsub("_.*","",dat.all$pos);
-        
-        
-        for(ii in 1:length(transcript.vec)) {
-            transcript.ii <- transcript.vec[ii];
-            chrpos <- character(0);
-            for(jj in 1:length(twas.weight)) {
-                ix <- which(twas.weight[[jj]]$gene==transcript.ii);
-                chrpos <- c(chrpos,twas.weight[[jj]]$chrpos[ix]);
-            }
-            chrpos <- unique(chrpos);
-            if(length(chrpos)>0) {
-                tabix.range <- get.tabix.range(chrpos);
-                a <- Sys.time();
-                cat('Analyzing ',transcript.ii,' ');
-                chr.ii <- table(gsub(":.*","",chrpos));
-                chr.ii <- as.numeric(names(chr.ii[which.max(chr.ii)]));
-
-                if(load.r2==FALSE) 
-                    r2 <- calc.r2(vcf.ref.file[as.numeric(chr.vec[ii])],tabix.range,refGeno);
-                if(load.r2==TRUE) {
-                    fname.r2 <- paste0(fname.r2.prefix,transcript.ii,fname.r2.postfix);
-                    load(fname.r2);
-                }
-                if(is.null(r2)) {
-                    warning.msg <- paste0(transcript.ii,' has no r2 information, skip!');
-                    warning(warning.msg);
-                }
-                if(!is.null(r2)) {
-                    pos.r2 <- colnames(r2);
-                    ix <- dat.all$pos%in%chrpos;
-                    dat <- list(pos=dat.all$pos[ix],
-                                ustat.mat=as.matrix(dat.all$ustat.mat[ix,],nrow=length(ix)),
-                                vstat.mat=as.matrix(dat.all$vstat.mat[ix,],nrow=length(ix)),
-                                nSample.mat=dat.all$nSample.mat
-                                );
-                    
-                    ix.match <- match(dat$pos,pos.r2);
-                    r2 <- matrix(r2[ix.match,ix.match],nrow=length(ix.match));
-                    diag(r2) <- 1+lambda;
-                    r2 <- rm.na(r2);
-                    ##r2 <- regMat(r2,.1);
-                    counter <- counter+1;
-                    
-                    cov.exp <- matrix(0,nrow=length(twas.weight),ncol=length(twas.weight));
-                    exp.vec <- rep(0,length(twas.weight));
-                    weight.mat <- matrix(0,ncol=length(twas.weight),nrow=length(dat$pos));
-                    for(kk in 1:length(twas.weight)) {
-                        pos.eqtl <- intersect(twas.weight[[kk]]$chrpos[which(twas.weight[[kk]]$gene==transcript.ii)],dat$pos);
-                        ix.eqtl <- match(pos.eqtl,dat$pos);
-                        weight.mat[ix.eqtl,kk] <- twas.weight[[kk]]$weight[match(pos.eqtl,twas.weight[[kk]]$chrpos)];
+    w.mat <- matrix(rm.na(sqrt(rm.na(dat$nSample.mat)*rm.na(dat$af.mat)*(1-rm.na(dat$af.mat)))*dat$w.mat),nrow=nrow(dat$ustat.mat),ncol=ncol(dat$ustat.mat));
+    z.mat <- matrix(z.mat[dat$ix.rare,],nrow=length(dat$ix.rare));
+    w.mat <- matrix(w.mat[dat$ix.rare,],nrow=length(dat$ix.rare));
+    beta.mat <- z.mat/w.mat;
+    se.mat <- 1/w.mat;
+    cov.beta.pred <- matrix(0,nrow=nrow(z.mat),ncol=nrow(z.mat));
+    beta.pred <- rep(0,nrow(z.mat));
+    af.pca <- as.matrix(af.pca);
+    beta.pred.list <- list();
+    cov.beta.pred.list <- list();
+    gcov.beta.pred <- matrix(0,nrow=nrow(z.mat)*ncol(af.pca),ncol=nrow(z.mat)*ncol(af.pca));
+    for(kk in 1:ncol(af.pca)) {
+        for(jj1 in 1:nrow(z.mat)) {
+            for(jj2 in 1:nrow(z.mat)) {
+                if(jj1>=jj2) {
+                    if(!all(is.na(beta.mat[jj1,])) & !all(is.na(beta.mat[jj2,]))) {
+                        lm.weight.all1 <- matrix(0,nrow=length(w.mat[jj1,]),ncol=length(w.mat[jj1,]));
+                        diag(lm.weight.all1) <- (w.mat[jj1,])^2;
+                        lm.weight.all2 <- matrix(0,nrow=length(w.mat[jj2,]),ncol=length(w.mat[jj2,]));
+                        diag(lm.weight.all2) <- (w.mat[jj2,])^2;                    
+                        ix.rm <- which(is.na(beta.mat[jj1,]) | is.na(w.mat[jj1,]) | is.na(beta.mat[jj2,]) | is.na(w.mat[jj2,]));
+                        beta.jj1 <- beta.mat[jj1,];
+                        se.jj1 <- se.mat[jj1,];
+                        beta.jj2 <- beta.mat[jj2,];
+                        se.jj2 <- se.mat[jj2,];
+                        af.pca.jj <- af.pca[,1:kk];
                         
+                        if(length(ix.rm)>0) {
+                            lm.weight.all1 <- matrix(lm.weight.all1[-ix.rm,-ix.rm],nrow=nrow(lm.weight.all1)-length(ix.rm));
+                            lm.weight.all2 <- matrix(lm.weight.all2[-ix.rm,-ix.rm],nrow=nrow(lm.weight.all2)-length(ix.rm));
+                            
+                            beta.jj1 <- beta.mat[jj1,-ix.rm];
+                            se.jj1 <- se.mat[jj1,-ix.rm];
+                            beta.jj2 <- beta.mat[jj2,-ix.rm];
+                            se.jj2 <- se.mat[jj2,-ix.rm];
+                            
+                            af.pca.jj <- matrix(af.pca[-ix.rm,1:kk],ncol=kk);
+                        }
+                        if(length(ix.rm)<ncol(beta.mat)) {
+                            gamma.est1 <- ginv(t(af.pca.jj)%*%lm.weight.all1%*%af.pca.jj)%*%(t(af.pca.jj)%*%lm.weight.all1%*%beta.jj1);
+                            beta.pred[jj1] <- as.numeric(t(af.pca.eqtl[1:kk])%*%gamma.est1);
+                            A.L <- ginv(t(af.pca.jj)%*%lm.weight.all1%*%af.pca.jj)%*%(t(af.pca.jj)%*%lm.weight.all1);
+                            A.R <- ginv(t(af.pca.jj)%*%lm.weight.all2%*%af.pca.jj)%*%(t(af.pca.jj)%*%lm.weight.all2);
+                            cov.beta <- matrix(0,nrow=ncol(beta.mat)-length(ix.rm),ncol=ncol(beta.mat)-length(ix.rm));
+                            for(bb in 1:nrow(cov.beta)) {
+                                    cov.beta[bb,bb] <- se.jj2[bb]*se.jj1[bb]*dat$r2.by.study[[bb]][jj1,jj2];
+                                }
+                            cov.gamma.1.2 <- A.L%*%cov.beta%*%t(A.R);
+                            
+                            cov.beta.pred[jj1,jj2] <- t(af.pca.eqtl[1:kk])%*%cov.gamma.1.2%*%(af.pca.eqtl[1:kk]);
+                            cov.beta.pred[jj2,jj1] <- cov.beta.pred[jj1,jj2];
+                            
+                            if(kk==1) {
+                                for(ll1 in 1:ncol(af.pca)) {
+                                    for(ll2 in 1:ncol(af.pca)) {
+                                        af.pca.ll1 <- as.matrix(af.pca[,1:ll1]);
+                                        af.pca.ll2 <- as.matrix(af.pca[,1:ll2]);
+                                        if(length(ix.rm)>0) {
+                                            af.pca.ll1 <- matrix(af.pca.ll1[-ix.rm,],ncol=ll1);
+                                            af.pca.ll2 <- matrix(af.pca.ll2[-ix.rm,],ncol=ll2);
+                                        }
+                                            
+                                        A.L1 <- ginv(t(af.pca.ll1)%*%lm.weight.all1%*%af.pca.ll1)%*%(t(af.pca.ll1)%*%lm.weight.all1);
+                                        A.R2 <- ginv(t(af.pca.ll2)%*%lm.weight.all2%*%af.pca.ll2)%*%(t(af.pca.ll2)%*%lm.weight.all2);
+                                        cov.gamma.1.2.tmp <- A.L1%*%cov.beta%*%t(A.R2);
+                                        
+                                        gcov.beta.pred[jj1+(ll1-1)*nrow(z.mat),jj2+(ll2-1)*nrow(z.mat)] <- rm.na(t(af.pca.eqtl[1:ll1])%*%cov.gamma.1.2.tmp%*%(af.pca.eqtl[1:ll2]));
+                                        
+                                        gcov.beta.pred[jj2+(ll1-1)*nrow(z.mat),jj1+(ll2-1)*nrow(z.mat)] <- gcov.beta.pred[jj1+(ll1-1)*nrow(z.mat),jj2+(ll2-1)*nrow(z.mat)];
+                                        
+                                    }
+                                }
+                            }
+                        }
                     }
-                    exp.vec <- rowSums(t(weight.mat)%*%rm.na(dat$ustat.mat),na.rm=TRUE);
-                    for(ix.study in 1:ncol(dat$vstat.mat)) {
-                        cov.mat <- t(r2*rm.na(dat$vstat.mat[,ix.study]))*rm.na(dat$vstat.mat[,ix.study]);
-                        
-                        cov.exp <- cov.exp+t(weight.mat)%*%cov.mat%*%weight.mat;
-                    }
-                    ix.rm <- which(exp.vec==0);
-                    if(length(ix.rm)>0) {
-                        exp.vec <- exp.vec[-ix.rm];
-                        cov.exp <- as.matrix(cov.exp[-ix.rm,-ix.rm]);
-                    }
-                    dat.twas <- list();
-                    dat.twas$ustat.meta <- exp.vec;
-                    dat.twas$V.meta <- cov.exp;
-                    res.twas <- rareGWAMA.skat(dat.twas,weight='linear');
-                    
-                    pval.vec[counter] <- res.twas$p.value;
-                    res.twas <- rareGWAMA.t(dat.twas);
-                    pval.t.vec[counter] <- res.twas$p.value;
-                    statistic.vec[counter] <- res.twas$statistic;
-                    transcript.out[counter] <- transcript.ii;
-                    cat('Time usage ', Sys.time()-a,' \n');
                 }
+                
             }
         }
+        beta.pred.list[[kk]] <- beta.pred;
+        cov.beta.pred.list[[kk]] <- cov.beta.pred;
+        
     }
-    res.out <- cbind(transcript.out,statistic.vec,pval.vec,pval.t.vec);
-    colnames(res.out) <- c("GENE","STATISTIC","PVALUE","PVALUE.t");
-
-    return(list(res.out=res.out,
-                dat.twas=dat.twas,
-                res.twas=res.twas,
-                dat=dat,
-                dat.all=dat.all,
-                r2=r2,
-                weight.mat=weight.mat,
-                raw.data.all=raw.data.all
-                ));
+    
+    
+    return(list(beta.pred.list=beta.pred.list,
+                cov.beta.pred.list=cov.beta.pred.list,
+                gcov.beta.pred=gcov.beta.pred));
 }
 
-
+#' rareGWAMA.twas function
 #'
-#' calculate R2 from a list of variants;
-#' @param vcf.ref.file VCF reference file
-#' @param tabix.range tabix range for a list of variants;
-#' @param refGeno the FORMAT field for genotypes; could be GT or DS;
-#' @return calcualted r2 matrix; with positions being the row and colnames;
+#' @param dat the formatted data from indv studies;
+#' @param af.pca the pca of allele frequencies from participating studies;
+#' @param af.pca.eqtl
 #' @export
-calc.r2 <- function(vcf.ref.file,tabix.range,refGeno="GT") {
-    vcfIndv <- refGeno;
-    annoType <- "";
-    vcfColumn <- c("CHROM","POS","REF","ALT");
-    vcfInfo <- NULL;      
-    geno.list <- readVCFToListByRange(vcf.ref.file, tabix.range, "", vcfColumn, vcfInfo, vcfIndv)      
-    if(refGeno=="DS") {
-        gt <- geno.list$DS;
-        if(is.null(gt)) {
-            return(NULL);
+rareGWAMA.twas <- function(dat,af.pca,pca.eqtl) {
+
+    if(nrow(dat$ustat.mat)==0 | length(dat$ix.rare)==0)
+        return(list(statistic=NA,
+                    p.value=NA,
+                    p.value.minp=NA,
+                    maf.cutoff=1))
+    res.in <- rareGWAMA.twas.predEff(dat,af.pca,pca.eqtl);
+    
+    beta.pred.list <- res.in$beta.pred.list;
+    cov.beta.pred.list <- res.in$cov.beta.pred.list;
+
+    statistic <- NA;p.value <- NA;
+    z.stat <- NA;numer <- NA;
+    for(kk in 1:length(beta.pred.list)) {
+        beta.pred <- rm.na(beta.pred.list[[kk]]);
+        
+        cov.beta.pred <- rm.na(as.matrix(cov.beta.pred.list[[kk]]));
+        reg.cov.beta.pred <- cov.beta.pred+beta.pred%*%t(beta.pred);
+        cor.beta.pred <- rm.na(cov2cor(cov.beta.pred));
+        reg.cor.beta.pred <- rm.na(cov2cor(reg.cov.beta.pred));
+        diag(cor.beta.pred) <- 1;
+        diag(reg.cor.beta.pred) <- 1;
+        statistic.tmp <- sum(dat$twas.weight*(beta.pred/sqrt(diag(cov.beta.pred))),na.rm=TRUE);
+        
+        ix.na <- which(is.na(dat$twas.weight))
+        if(length(ix.na)>0){
+          statistic.var <- t(dat$twas.weight[-ix.na])%*%cor.beta.pred[-ix.na, -ix.na]%*%(dat$twas.weight[-ix.na]);
+        } else {
+          statistic.var <- t(dat$twas.weight)%*%cor.beta.pred%*%(dat$twas.weight);
         }
-        gt <- matrix(as.numeric(gt),nrow=nrow(gt),ncol=ncol(gt));
         
-        
+        statistic[kk] <- as.numeric(statistic.tmp^2/statistic.var);
+        z.stat[kk] <- statistic.tmp/sqrt(statistic.var);
+        numer[kk] <- statistic.tmp;
+        p.value[kk] <- pchisq(statistic[kk],df=1,lower.tail=FALSE);
     }
-    if(refGeno=="GT") {
-        gt.tmp <- geno.list$GT;
-        if(is.null(gt.tmp)) return(NULL);
-        gt <- matrix(NA,nrow=nrow(gt.tmp),ncol=ncol(gt.tmp));
-        gt[which(gt.tmp=="0/0",arr.ind=T)] <- 0;
-        gt[which(gt.tmp=="1/0",arr.ind=T)] <- 1;
-        gt[which(gt.tmp=="0/1",arr.ind=T)] <- 1;
-        gt[which(gt.tmp=="1/1",arr.ind=T)] <- 2
-        gt[which(gt.tmp=="0|0",arr.ind=T)] <- 0;
-        gt[which(gt.tmp=="1|0",arr.ind=T)] <- 1;
-        gt[which(gt.tmp=="0|1",arr.ind=T)] <- 1;
-        gt[which(gt.tmp=="1|1",arr.ind=T)] <- 2
-        
+    cov.stat <- matrix(0,nrow=length(beta.pred.list),ncol=length(beta.pred.list));
+    for(kk1 in 1:length(beta.pred.list)) {
+        for(kk2 in 1:length(beta.pred.list)) {
+            cov.tmp <- res.in$gcov.beta.pred[((kk1-1)*length(dat$twas.weight)+1):((kk1)*length(dat$twas.weight)),((kk2-1)*length(dat$twas.weight)+1):((kk2)*length(dat$twas.weight))];
+            
+            ix.na <- which(is.na(dat$twas.weight))
+            if (length(ix.na)>0){
+              cov.stat[kk1,kk2] <- t(dat$twas.weight[-ix.na])%*%cov.tmp[-ix.na, -ix.na]%*%(dat$twas.weight[-ix.na]);  
+            } else{
+              cov.stat[kk1,kk2] <- t(dat$twas.weight)%*%cov.tmp%*%(dat$twas.weight);  
+            }
+        }
     }
-    r2 <- cor(gt,use='pairwise.complete');
-    r2 <- rm.na(r2);
-    pos.vcf <- paste(geno.list$CHROM,geno.list$POS,sep=":");
-    colnames(r2) <- pos.vcf;
-    rownames(r2) <- pos.vcf;
-    diag(r2) <- 1;
-    return(r2);
+    cov.stat <- make.pos.def(cov.stat);
+    cor.stat <- rm.na(cov2cor(cov.stat));
+    diag(cor.stat) <- 1;
+    
+    cor.stat <- 1/2*(cor.stat+t(cor.stat));
+    
+    if(all(is.na(statistic))){  ## debug added: in case all the value in statistics are NaN NaN NaN NaN
+      return(list(statistic=NA,
+                  p.value=NA,
+                  p.value.minp=NA,
+                  maf.cutoff=1))
+    }
+
+    pvalue.minp <- pvt(max(statistic),mu=rep(0,length(beta.pred.list)),sigma=cor.stat);
+    return(list(statistic=statistic,
+                p.value=p.value,
+                p.value.minp=pvalue.minp,
+                maf.cutoff=1))
 }

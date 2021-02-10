@@ -4,7 +4,7 @@
 \alias{getImpQual}
 \title{get imputation quality from tables based upon imputation quality files;}
 \usage{
-getImpQual(imp.qual, pos, col.impqual)
+getImpQual(imp.qual, pos, col.impqual, rmMultiAllelicSite = TRUE)
 }
 \arguments{
 \item{imp.qual}{the list with imputation qualities}

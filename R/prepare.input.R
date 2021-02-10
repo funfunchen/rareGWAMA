@@ -97,11 +97,11 @@ prepare.meta.input <- function(sumstat.list,ix.pop)
 #'
 #' @param x input;
 #' @export
-rm.na <- function(x)
-  {
-    ix.0 <- c(which(x==Inf | x==-Inf | is.na(x)));
+rm.na <- function(x) {
+    
+    ix.0 <- which(as.logical(x==Inf) | as.logical(x==-Inf) | as.logical(is.na(x)));
     if(length(ix.0)>0) x[ix.0] <- 0;
     return(x);
-  }
+}
 
 

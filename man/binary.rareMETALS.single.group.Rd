@@ -4,9 +4,17 @@
 \alias{binary.rareMETALS.single.group}
 \title{Single variant meta-analysis}
 \usage{
-binary.rareMETALS.single.group(score.stat.file, cov.file, range, refaltList,
-  alternative = c("two.sided", "greater", "less"), callrate.cutoff = 0,
-  hwe.cutoff = 0, correctFlip = TRUE, analyzeRefAltListOnly = TRUE)
+binary.rareMETALS.single.group(
+  score.stat.file,
+  cov.file,
+  range,
+  refaltList,
+  alternative = c("two.sided", "greater", "less"),
+  callrate.cutoff = 0,
+  hwe.cutoff = 0,
+  correctFlip = TRUE,
+  analyzeRefAltListOnly = TRUE
+)
 }
 \arguments{
 \item{score.stat.file}{files of score statistics}
@@ -15,7 +23,7 @@ binary.rareMETALS.single.group(score.stat.file, cov.file, range, refaltList,
 
 \item{range}{tabix range of variants to be analyzed}
 
-\item{refaltList}{A list of reference alternative and positions of variants to be analyzed; Each variant in the dataset will be match against ref/alt alleles specified in refaltList; Only variants with matched ref and alt alleles can be included; we also need AF and af.diff.max to determine if the flips are due to strand issues or due to ref/alt alleles flips;}
+\item{refaltList}{A list that contains pos, ref and alt for calibrating variant sites to have the right ref and alt alleles;}
 
 \item{alternative}{alternative hypothesis to be specified}
 
@@ -26,8 +34,6 @@ binary.rareMETALS.single.group(score.stat.file, cov.file, range, refaltList,
 \item{correctFlip}{Correcting for flipped alleles; Default is TRUE; If FALSE, studies with incorrect REF/ALT alleles will be labelled as missing, and dropped from meta-analyses}
 
 \item{analyzeRefAltListOnly}{Only analyze variants that are included in the refaltList; Default is TRUE; If FALSE, variant sites in the dataset but not specified in the refaltList will be labelled as missing and dropped from studies;}
-
-\item{refaltList}{A list that contains pos, ref and alt for calibrating variant sites to have the right ref and alt alleles;}
 }
 \value{
 a list consisting of results

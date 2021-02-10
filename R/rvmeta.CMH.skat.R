@@ -1,5 +1,6 @@
-rvmeta.CMH.skat <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,kernel)
+rvmeta.CMH.skat <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec,cov.mat.list,var.Y.list,N.list,alternative,no.boot,alpha,kernel,...)
   {
+      extraPar <- list(...);
     err.msg <- vector(length=0);
     if(alternative!="two.sided")
       {
@@ -22,6 +23,9 @@ rvmeta.CMH.skat <- function(X.T.times.Y.centered.list,X.T.times.X.list,maf.vec,c
       }
     if(kernel!="optimal-beta" & kernel!="optimal-linear")
       {
+          if(kernel=='twas') {
+              W <- diag(extraPar$twas.weight);
+          }
         if(kernel=='linear')
           {
             W <- diag(length(maf.vec));

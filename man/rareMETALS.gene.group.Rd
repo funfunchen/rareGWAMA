@@ -4,11 +4,23 @@
 \alias{rareMETALS.gene.group}
 \title{Meta-analysis of gene-level tests by range;}
 \usage{
-rareMETALS.gene.group(score.stat.file, cov.file, range, range.name,
-  test = "GRANVIL", refaltList, maf.cutoff = 1, no.boot = 10000,
-  alternative = c("two.sided", "greater", "less"), alpha = 0.05,
-  ix.gold = 1, out.digits = 4, callrate.cutoff = 0, hwe.cutoff = 0,
-  max.VT = NULL)
+rareMETALS.gene.group(
+  score.stat.file,
+  cov.file,
+  range,
+  range.name,
+  test = "GRANVIL",
+  refaltList,
+  maf.cutoff = 1,
+  no.boot = 10000,
+  alternative = c("two.sided", "greater", "less"),
+  alpha = 0.05,
+  ix.gold = 1,
+  out.digits = 4,
+  callrate.cutoff = 0,
+  hwe.cutoff = 0,
+  max.VT = NULL
+)
 }
 \arguments{
 \item{score.stat.file}{files of score statistics}

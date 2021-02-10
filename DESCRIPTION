@@ -1,13 +1,16 @@
 Package: rareGWAMA
 Type: Package
-Title: Meta-Analysis of Gene-level Rare Variant Association Test in Whole Genome Datasets
-Version: 0.4
-Date: 2016-10-09
+Title: Meta-Analysis of Gene-level Rare Variant Association Test in
+        Whole Genome Datasets
+Version: 0.7
+Date: 2019-12-15
 Author: Dajiang J. Liu, Xiaowei Zhan
 Maintainer: Dajiang J. Liu <dajiang.liu@outlook.com>
-Description: rareGWAMA implements extension of rareMETALS to handle whole genome sequence/imputation based analysis. 
+Description: rareGWAMA implements extension of rareMETALS to handle whole genome
+    sequence/imputation based analysis.
 License: GPL3
 Depends:
-    seqminer,mvtnorm,CompQuadForm,getopt,MASS,data.table
-Packaged: 2016-11-26 20:26:36 UTC; dajiang
-RoxygenNote: 6.0.1
+        seqminer,mvtnorm,CompQuadForm,getopt,MASS,data.table,qlcMatrix,Matrix,harmonicmeanp
+Packaged: 2020-09-19 15:35:15 UTC; dxl46
+RoxygenNote: 7.1.0
+NeedsCompilation: yes

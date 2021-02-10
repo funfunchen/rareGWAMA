@@ -4,9 +4,15 @@
 \alias{rareMETALS.single}
 \title{Single variant meta-analysis}
 \usage{
-rareMETALS.single(score.stat.file, cov.file, range,
-  alternative = c("two.sided", "greater", "less"), ix.gold = 1,
-  callrate.cutoff = 0, hwe.cutoff = 0)
+rareMETALS.single(
+  score.stat.file,
+  cov.file,
+  range,
+  alternative = c("two.sided", "greater", "less"),
+  ix.gold = 1,
+  callrate.cutoff = 0,
+  hwe.cutoff = 0
+)
 }
 \arguments{
 \item{score.stat.file}{files of score statistics}

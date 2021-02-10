@@ -4,11 +4,23 @@
 \alias{rareMETALS.gene}
 \title{Meta-analysis of gene-level tests;}
 \usage{
-rareMETALS.gene(ANNO, score.stat.file, cov.file, gene, test = "GRANVIL",
-  maf.cutoff, no.boot = 10000, alternative = c("two.sided", "greater",
-  "less"), alpha = 0.05, ix.gold = 1, out.digits = 4,
-  callrate.cutoff = 0, hwe.cutoff = 0, gene.file = "refFlat_hg19.txt.gz",
-  max.VT = NULL)
+rareMETALS.gene(
+  ANNO,
+  score.stat.file,
+  cov.file,
+  gene,
+  test = "GRANVIL",
+  maf.cutoff,
+  no.boot = 10000,
+  alternative = c("two.sided", "greater", "less"),
+  alpha = 0.05,
+  ix.gold = 1,
+  out.digits = 4,
+  callrate.cutoff = 0,
+  hwe.cutoff = 0,
+  gene.file = "refFlat_hg19.txt.gz",
+  max.VT = NULL
+)
 }
 \arguments{
 \item{ANNO}{type of variants to be analyzed;}

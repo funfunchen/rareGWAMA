@@ -4,9 +4,18 @@
 \alias{rvmeta.CMH}
 \title{Function that implement gene-level tests}
 \usage{
-rvmeta.CMH(score.stat.vec.list, maf.vec.list, cov.mat.list, var.Y.list, N.mat,
-  alternative = c("two.sided", "greater", "less"), no.boot, alpha = 0.05,
-  rv.test, extra.pars = list())
+rvmeta.CMH(
+  score.stat.vec.list,
+  maf.vec.list,
+  cov.mat.list,
+  var.Y.list,
+  N.mat,
+  alternative = c("two.sided", "greater", "less"),
+  no.boot,
+  alpha = 0.05,
+  rv.test,
+  extra.pars = list()
+)
 }
 \description{
 Function that implement gene-level tests

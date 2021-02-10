@@ -4,11 +4,23 @@
 \alias{conditional.rareMETALS.range.group}
 \title{Perform conditional analysis for gene-level tests and correcting for allele flips with}
 \usage{
-conditional.rareMETALS.range.group(range.name = NULL, score.stat.file,
-  cov.file, candidate.variant.vec, known.variant.vec, test = "GRANVIL",
-  maf.cutoff, alternative = c("two.sided", "greater", "less"), refaltList,
-  out.digits = 4, callrate.cutoff = 0, hwe.cutoff = 0, max.VT = NULL,
-  correctFlip = TRUE, analyzeRefAltListOnly = TRUE)
+conditional.rareMETALS.range.group(
+  range.name = NULL,
+  score.stat.file,
+  cov.file,
+  candidate.variant.vec,
+  known.variant.vec,
+  test = "GRANVIL",
+  maf.cutoff,
+  alternative = c("two.sided", "greater", "less"),
+  refaltList,
+  out.digits = 4,
+  callrate.cutoff = 0,
+  hwe.cutoff = 0,
+  max.VT = NULL,
+  correctFlip = TRUE,
+  analyzeRefAltListOnly = TRUE
+)
 }
 \arguments{
 \item{range.name}{name of the range to be analyzed (for example, it can be a gene name e.g. APOE)}

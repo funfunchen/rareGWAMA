@@ -4,8 +4,12 @@
 \alias{find.top.variant}
 \title{Find top variants in a gene region that satisfy a MAF cutoff;}
 \usage{
-find.top.variant(candidate.variant.vec, window.size, singlevar.result,
-  pval.cutoff = 3.1e-07)
+find.top.variant(
+  candidate.variant.vec,
+  window.size,
+  singlevar.result,
+  pval.cutoff = 3.1e-07
+)
 }
 \arguments{
 \item{window.size}{The size of window, default is 1e6}

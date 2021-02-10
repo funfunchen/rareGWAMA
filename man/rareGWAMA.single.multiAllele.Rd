@@ -4,9 +4,15 @@
 \alias{rareGWAMA.single.multiAllele}
 \title{gateway function for multi-allelic analysis in rareGWAMA}
 \usage{
-rareGWAMA.single.multiAllele(score.stat.file, imp.qual.file = NULL,
-  tabix.range, alternative = "two.sided", col.impqual = 5,
-  impQual.lb = 0.7, impQualWeight = FALSE)
+rareGWAMA.single.multiAllele(
+  score.stat.file,
+  imp.qual.file = NULL,
+  tabix.range,
+  alternative = "two.sided",
+  col.impqual = 5,
+  impQual.lb = 0.7,
+  impQualWeight = FALSE
+)
 }
 \arguments{
 \item{imp.qual.file}{The imputation quality file names;}

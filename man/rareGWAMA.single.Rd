@@ -4,9 +4,18 @@
 \alias{rareGWAMA.single}
 \title{single variant meta-analysis integrating imputation quality;}
 \usage{
-rareGWAMA.single(score.stat.file, imp.qual.file = NULL, tabix.range,
-  alternative = "two.sided", col.impqual = 5, impQual.lb = 0.7,
-  impQualWeight = FALSE, rmMultiAllelicSite = FALSE, gc = FALSE, ...)
+rareGWAMA.single(
+  score.stat.file,
+  imp.qual.file = NULL,
+  tabix.range,
+  alternative = "two.sided",
+  col.impqual = 5,
+  impQual.lb = 0.7,
+  impQualWeight = FALSE,
+  rmMultiAllelicSite = FALSE,
+  gc = FALSE,
+  ...
+)
 }
 \arguments{
 \item{score.stat.file}{the file names of score statistic files;}
@@ -24,18 +33,12 @@ rareGWAMA.single(score.stat.file, imp.qual.file = NULL, tabix.range,
 \item{impQualWeight}{Using imputation quality as weight}
 
 \item{rmMultiAllelicSite}{Default is TRUE. Multi-allelic sites will be removed from the analyses if set TRUE, and a variable posMulti will be output; The variant site with multiple alleles can be analyzed using rareGWAMA.single.multiAllele function;}
+
+\item{weight}{The weights used in meta-analysis; the default choice is Npq+impQ, which is a weighting scheme that takes into account both the imputation quality and allele freq difference between studies;}
 }
 \value{
 A list of analysis results;
 }
 \description{
 single variant meta-analysis integrating imputation quality;
-}
-\examples{
-study.vec <- c("rareGWAMA/inst/extdata/study1.gz", "rareGWAMA/inst/extdata/study1.R2.gz", "rareGWAMA/inst/extdata/study3.gz");
-r2.vec <- c("rareGWAMA/inst/extdata/study1.R2.gz", "rareGWAMA/inst/extdata/study2.R2.gz", "rareGWAMA/inst/extdata/study3.R2.gz");
-res <- rareGWAMA.single(score.stat.file = study.vec, imp.qual.file = r2.vec ,"1:10177-57200", alternative="two.sided", 
-                        col.impqual=5, impQual.lb=0, impQualWeight=FALSE, weight="Npq+impQ", 
-                        gc=FALSE, rmMultiAllelicSite=TRUE);
-head(res$res.formatted);
 }

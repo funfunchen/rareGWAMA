@@ -4,9 +4,15 @@
 \alias{rareMETALS.single.correctRefAlt}
 \title{Single variant meta-analysis}
 \usage{
-rareMETALS.single.correctRefAlt(score.stat.file, cov.file, range, refaltList,
-  alternative = c("two.sided", "greater", "less"), callrate.cutoff = 0,
-  hwe.cutoff = 0)
+rareMETALS.single.correctRefAlt(
+  score.stat.file,
+  cov.file,
+  range,
+  refaltList,
+  alternative = c("two.sided", "greater", "less"),
+  callrate.cutoff = 0,
+  hwe.cutoff = 0
+)
 }
 \arguments{
 \item{score.stat.file}{files of score statistics}
@@ -15,15 +21,13 @@ rareMETALS.single.correctRefAlt(score.stat.file, cov.file, range, refaltList,
 
 \item{range}{tabix range of variants to be analyzed}
 
-\item{refaltList}{A list of reference alternative and positions of variants to be analyzed; Each variant in the dataset will be match against ref/alt alleles specified in refaltList; Only variants with matched ref and alt alleles can be included;}
+\item{refaltList}{A list that contains pos, ref and alt for calibrating variant sites to have the right ref and alt alleles;}
 
 \item{alternative}{alternative hypothesis to be specified}
 
 \item{callrate.cutoff}{Cutoffs of call rate, lower than which will NOT be analyzed (labelled as missing)}
 
 \item{hwe.cutoff}{Cutoffs of HWE p-values}
-
-\item{refaltList}{A list that contains pos, ref and alt for calibrating variant sites to have the right ref and alt alleles;}
 }
 \value{
 a list consisting of results

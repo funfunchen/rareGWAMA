@@ -4,8 +4,15 @@
 \alias{imputeConditional}
 \title{Impute missing summary association statistics assuming}
 \usage{
-imputeConditional(ustat.list, vstat.list, cov.mat.list, N.mat,
-  beta.vec = NULL, ix.candidate, ix.known)
+imputeConditional(
+  ustat.list,
+  vstat.list,
+  cov.mat.list,
+  N.mat,
+  beta.vec = NULL,
+  ix.candidate,
+  ix.known
+)
 }
 \arguments{
 \item{ustat.list}{the score statistics;}

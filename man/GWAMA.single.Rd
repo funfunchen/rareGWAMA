@@ -4,8 +4,11 @@
 \alias{GWAMA.single}
 \title{Single variant meta-analysis}
 \usage{
-GWAMA.single(score.stat.file, range, alternative = c("two.sided", "greater",
-  "less"))
+GWAMA.single(
+  score.stat.file,
+  range,
+  alternative = c("two.sided", "greater", "less")
+)
 }
 \arguments{
 \item{score.stat.file}{files of score statistics}

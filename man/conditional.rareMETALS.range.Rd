@@ -4,10 +4,21 @@
 \alias{conditional.rareMETALS.range}
 \title{Perform conditional analysis for gene-level tests}
 \usage{
-conditional.rareMETALS.range(range.name = NULL, score.stat.file, cov.file,
-  candidate.variant.vec, known.variant.vec, test = "GRANVIL", maf.cutoff,
-  alternative = c("two.sided", "greater", "less"), ix.gold = 1,
-  out.digits = 4, callrate.cutoff = 0, hwe.cutoff = 0, max.VT = NULL)
+conditional.rareMETALS.range(
+  range.name = NULL,
+  score.stat.file,
+  cov.file,
+  candidate.variant.vec,
+  known.variant.vec,
+  test = "GRANVIL",
+  maf.cutoff,
+  alternative = c("two.sided", "greater", "less"),
+  ix.gold = 1,
+  out.digits = 4,
+  callrate.cutoff = 0,
+  hwe.cutoff = 0,
+  max.VT = NULL
+)
 }
 \arguments{
 \item{range.name}{name of the range to be analyzed (for example, it can be a gene name e.g. APOE)}
