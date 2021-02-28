@@ -17,7 +17,7 @@ It is developed and maintained by [Dajiang Liu's Group](https://dajiangliu.blog/
 
 This repository is for `TESLA` (*T*rans-*E*thnic transcriptome-wide association *S*tudy approach using an optimal *L*inear combination of *A*ssociation statistics), an improved TWAS method that optimally integrates trans-ethnic GWAS data with eQTL datasets. 
 
-TESLA is implemented in rareGWAMA, if you want to use all the meta analysis related functions in raraGWAMA, please refer to this [page](https://github.com/dajiangliu/rareGWAMA).
+TESLA is implemented in the `rareGWAMA`, if you want to use all the meta analysis related functions in raraGWAMA, please refer to this [page](https://github.com/dajiangliu/rareGWAMA).
 
 ------------------------------------------------------
 ## Citations
@@ -25,7 +25,7 @@ Liu DJ*†, Peloso GM*, Zhan X*, Holmen O*, Zawistowski M, Feng S, Nikpay M, Aue
 **Meta-analysis of gene-level tests of rare variant association, Nature Genetics, 46, 200–204 (2014)**  
 [doi: 10.1038/ng.2852.](https://www.nature.com/articles/ng.2852)
 
-Trans-ethnic Transcriptome-wide Association Study for Smoking Addiction in 1.3 Million Individuals Yields Insights into Tobacco Use Biology and Drug Repurposing
+**Trans-ethnic Transcriptome-wide Association Study for Smoking Addiction in 1.3 Million Individuals Yields Insights into Tobacco Use Biology and Drug Repurposing**
 (in preparation)
 
 ------------------------------------------------------
@@ -42,7 +42,7 @@ And also, you need the latest version of [seqminer](https://github.com/zhanxw/se
 
 Then you could use:
 
-    install_github("dajiangliu/rareGWAMA")
+    install_github("funfunchen/rareGWAMA")
     
 With `library(rareGWAMA)`, your are ready to go!
 
