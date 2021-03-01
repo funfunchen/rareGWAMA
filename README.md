@@ -67,30 +67,32 @@ res.gene.ii <- rareGWAMA.gene(score.stat.file,
                                 maf.cutoff=1,
                                 study.ref.panel=study.ref.panel,
                                 chrVcfPrefix=c("chr",""), chrSumstatPrefix="chr",
+                                pc.no=3,
                                 af.pca=as.matrix(af.pca), af.pca.eqtl=gtex.pca,
                                 gc=TRUE, maf.bin=maf.bin, gc.lambda=gc.merge,
                                 regMat.lambda=0.0);
 ```  
 
-please find more details in the wiki: [input formats]() for the arguments:
-> * score.stat.file: The file names of score statistic files, which is a **vector object**;
+please find more details in the wiki: [input formats](https://github.com/funfunchen/rareGWAMA/wiki/2.-Input-files-and-arguments) for the arguments:
+> * score.stat.file: The file paths of all the score statistic files, which is a **vector object**;
 > * imp.qual.file: Default is `NULL`. The file names of imputation quality, which is a **vector object**;
-> * vcf.ref.file: The file names of the reference panel files, which is a **list object**;
+> * vcf.ref.file: The file paths of the reference panel files, which is a **list object**. Each list element is a **data.frame** which contains all the vcf files paths for this panel;
 > * refFileFormat: `vcf` or `vcf.vbi`;
 > * anno: eQTL weights and annotation file, which is a **data.frame** object;
-> * annoType: the annotation types: could be `Nonsynonymous|Stop|Splice` or just `-`;
-> * rvtest: the Rare-Variant Association Testing you want to use (i.e. 'VT', 'BURDEN', 'SKAT'), usging `TESLA` here;
-> * ref.ancestry: individuals' ancestry information, which is a **list object**;
+> * annoType: The annotation types: could be `Nonsynonymous|Stop|Splice` or just `-`;
+> * rvtest: The Rare-Variant Association Testing you want to use (i.e. 'VT', 'BURDEN', 'SKAT'), usging `TESLA` here;
+> * ref.ancestry: Individuals' ancestry information, which is a **list object**;
 > * trans.ethnic: `True` for multi-ethnic analysis;
-> * study.ancestry:  ancestry information for each study, which is a **vector object**;
-> * maf.cutoff: the minor allele frequency cut off, `1` as default;
-> * study.ref.panel: ref.panel used for each study, which is a **vector object**;
-> * chrVcfPrefix: the prefix of chromosome colomn used for eac ref panel, which is a **vector object**;
-> * chrSumstatPrefix: what the prefix is, usually is `chr`;
-> * af.pca: MDS information (or PCA) of all the studies, which is a **matrix object**;
-> * af.pca.eqtl: the MDS information of the eQTL data, which is a **vector object**;
-> * gc: Default is `TRUE`;
-> * maf.bin: the minor allelle frequency used, which is a **matrix object**;
+> * study.ancestry: Ancestry information for each study, which is a **vector object**;
+> * maf.cutoff: The minor allele frequency cut off, `1` as default;
+> * study.ref.panel: `ref.panel` used for each study, which is a **vector object**;
+> * chrVcfPrefix: The prefix of chromosome colomn used for each ref panel, which is a **vector object**;
+> * chrSumstatPrefix: What the prefix is, usually is `chr`;
+> * pc.no: The number of PCs are incorporated in the analysis;
+> * af.pca: MDS information (or PCA) of all the studies, which is a **matrix object**. Please add `a column of 1` to represent the intercept;
+> * af.pca.eqtl: The MDS information of the eQTL data, which is a **vector object**. Please add `1` to represent the intercept;
+> * gc: Default is `FALSE`;
+> * maf.bin: The minor allelle frequency used, which is a **matrix object**;
 > * gc.lambda: GC values for each study, which is a **data.frame** object;
 > * regMat.lambda: `0` as default;  
 
@@ -125,3 +127,7 @@ Dajiang Liu ([dajiang.liu@outlook.com](mailto:dajiang.liu@outlook.com "mailto:da
 <a name="myfootnote1">1</a>: Xiaowei Zhan, Youna Hu, Bingshan Li, Goncalo R. Abecasis, and Dajiang J. Liu       
 **RVTESTS: An Efficient and Comprehensive Tool for Rare Variant Association Analysis Using Sequence Data**      
 Bioinformatics 2016 32: 1423-1426. [doi:10.1093/bioinformatics/btw079](http://bioinformatics.oxfordjournals.org/content/32/9/1423.short)  ([PDF](http://bioinformatics.oxfordjournals.org/content/32/9/1423.full.pdf+html))
+
+<a name="myfootnote2">2</a>: Yang L, Jiang S, Jiang B, Liu DJ, Zhan X  
+**Seqminer2: an efficient tool to query and retrieve genotypes for statistical genetics analyses from biobank scale sequence dataset**
+Bioinformatics. 2020 Oct 1;36(19):4951-4. [doi:10.1093/bioinformatics/btaa628](https://academic.oup.com/bioinformatics/article-abstract/36/19/4951/5881355?redirectedFrom=fulltext)

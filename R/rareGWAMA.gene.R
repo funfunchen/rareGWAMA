@@ -131,7 +131,7 @@ rareGWAMA.formatGene <- function(dat,...) {
 rareGWAMA.gene <- function(score.stat.file,imp.qual.file=NULL,vcf.ref.file,anno,gc=FALSE,...) {
     uniq.allele <- function(x) {x.tab <- table(x);return(paste(names(x.tab),sep=',',collapse=','))}
     extraPar <- list(...);
-    anno$chrom <- gsub("chr","",anno$chrom);
+    anno$chrom <- gsub("chr","",anno$chrom); # format the chr column
     maf.cutoff <- extraPar$maf.cutoff;
     if(is.null(maf.cutoff)) maf.cutoff <- 1;
     r2.cutoff <- extraPar$r2.cutoff;
@@ -140,6 +140,9 @@ rareGWAMA.gene <- function(score.stat.file,imp.qual.file=NULL,vcf.ref.file,anno,
     if(is.null(sizePerBatch)) sizePerBatch <- 100;
     if(is.null(extraPar$trans.ethnic)) {
         extraPar$trans.ethnic <- FALSE;
+    }
+    if(is.null(extraPar$pc.no)) {
+        extraPar$pc.no <- 3;
     }
     if(is.null(extraPar$twas)) extraPar$twas <- FALSE;
     refGeno <- extraPar$refGeno;
@@ -177,6 +180,7 @@ rareGWAMA.gene <- function(score.stat.file,imp.qual.file=NULL,vcf.ref.file,anno,
     if(length(ix.intergenic)>0) gene.vec <- gene.vec[-ix.intergenic];
     numBatch <- as.integer(length(gene.vec)/sizePerBatch);
     if(numBatch*sizePerBatch<length(gene.vec)) numBatch <- numBatch+1;
+    col.no <-  14 + (2 * extraPar$pc.no) # setup results column numbers 
     res.out <- matrix(nrow=length(gene.vec),ncol=20);
     res.out[,1] <- gene.vec;
     
