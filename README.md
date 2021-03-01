@@ -17,7 +17,7 @@ It is developed and maintained by [Dajiang Liu's Group](https://dajiangliu.blog/
 
 This repository is for `TESLA` (*T*rans-*E*thnic transcriptome-wide association *S*tudy approach using an optimal *L*inear combination of *A*ssociation statistics), an improved TWAS method that optimally integrates trans-ethnic GWAS data with eQTL datasets. 
 
-TESLA is implemented in the `rareGWAMA`, if you want to use all the meta analysis related functions in raraGWAMA, please refer to this [page](https://github.com/dajiangliu/rareGWAMA).
+TESLA is implemented in the `rareGWAMA` package, if you want to use all the `Rare-Variant Association Analysis` related functions in raraGWAMA, please refer to this [page](https://github.com/dajiangliu/rareGWAMA).
 
 ------------------------------------------------------
 ## Citations
@@ -50,7 +50,7 @@ With `library(rareGWAMA)`, your are ready to go!
 ------------------------------------------------------
 ## Quick tutorial <a name="quick-tutorial"></a>
 
-1. The [wiki](https://github.com/funfunchen/rareGWAMA/wiki) has detailed tutorials on [input formats](), [analysis]() and [results interpretation]().
+1. The [wiki](https://github.com/funfunchen/rareGWAMA/wiki) has detailed tutorials on [input formats](https://github.com/funfunchen/rareGWAMA/wiki/2.-Input-files-and-arguments), [analysis](https://github.com/funfunchen/rareGWAMA/wiki/3.-Analysis) and [results interpretation](https://github.com/funfunchen/rareGWAMA/wiki/4.-Results-interpretation).
 2. The methods are described in the papers [(citations above)](#citations)
 
 ### Single variant tests <a name="Single-variant-tests"></a>
@@ -77,7 +77,7 @@ please find more details in the wiki: [input formats]() for the arguments:
 > * imp.qual.file: Default is `NULL`. The file names of imputation quality, which is a **vector object**;
 > * vcf.ref.file: The file names of the reference panel files, which is a **list object**;
 > * refFileFormat: `vcf` or `vcf.vbi`;
-> * anno: eQTL weights file;
+> * anno: eQTL weights and annotation file, which is a **data.frame** object;
 > * annoType: the annotation types: could be `Nonsynonymous|Stop|Splice` or just `-`;
 > * rvtest: the Rare-Variant Association Testing you want to use (i.e. 'VT', 'BURDEN', 'SKAT'), usging `TESLA` here;
 > * ref.ancestry: individuals' ancestry information, which is a **list object**;
@@ -87,11 +87,11 @@ please find more details in the wiki: [input formats]() for the arguments:
 > * study.ref.panel: ref.panel used for each study, which is a **vector object**;
 > * chrVcfPrefix: the prefix of chromosome colomn used for eac ref panel, which is a **vector object**;
 > * chrSumstatPrefix: what the prefix is, usually is `chr`;
-> * af.pca: MDS information (or PCA) of all the studies;
-> * af.pca.eqtl: the MDS information of the eQTL data;
-> * gc: Default is TRUE;
-> * maf.bin: the minor allelle frequency used, which is a **matrix object**
-> * gc.lambda: GC values for each study;
+> * af.pca: MDS information (or PCA) of all the studies, which is a **matrix object**;
+> * af.pca.eqtl: the MDS information of the eQTL data, which is a **vector object**;
+> * gc: Default is `TRUE`;
+> * maf.bin: the minor allelle frequency used, which is a **matrix object**;
+> * gc.lambda: GC values for each study, which is a **data.frame** object;
 > * regMat.lambda: `0` as default;  
 
 2.The out put should be as follows:  
